@@ -1,0 +1,167 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.36.1.42791",
+      "templateHash": "3685248997039898745"
+    }
+  },
+  "parameters": {
+    "resourceGroupName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Resource Group"
+      }
+    },
+    "webAppName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Web App"
+      }
+    },
+    "appServicePlanName": {
+      "type": "string",
+      "defaultValue": "asp-azmpconnector",
+      "metadata": {
+        "description": "Name of the App Service Plan"
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Location for all resources"
+      }
+    },
+    "containerImage": {
+      "type": "string",
+      "defaultValue": "docker.io/yourusername/azmpconnector:latest",
+      "metadata": {
+        "description": "Docker image (e.g., docker.io/yourusername/azmpconnector:latest)"
+      }
+    },
+    "azureTenantId": {
+      "type": "string",
+      "metadata": {
+        "description": "Azure Tenant ID for Service Principal"
+      }
+    },
+    "azureClientId": {
+      "type": "string",
+      "metadata": {
+        "description": "Azure Client ID for Service Principal"
+      }
+    },
+    "azureClientSecret": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Azure Client Secret for Service Principal"
+      }
+    },
+    "azureSubscriptionId": {
+      "type": "string",
+      "metadata": {
+        "description": "Azure Subscription ID for Service Principal"
+      }
+    },
+    "corsOrigin": {
+      "type": "string",
+      "defaultValue": "*",
+      "metadata": {
+        "description": "CORS Origin"
+      }
+    },
+    "logLevel": {
+      "type": "string",
+      "defaultValue": "info",
+      "metadata": {
+        "description": "Log Level"
+      }
+    },
+    "nodeEnv": {
+      "type": "string",
+      "defaultValue": "production",
+      "metadata": {
+        "description": "Node Environment"
+      }
+    },
+    "websitesPort": {
+      "type": "string",
+      "defaultValue": "80",
+      "metadata": {
+        "description": "Web App Port"
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2022-03-01",
+      "name": "[parameters('appServicePlanName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "B1",
+        "tier": "Basic",
+        "size": "B1",
+        "capacity": 1
+      },
+      "kind": "linux",
+      "properties": {
+        "reserved": true
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2022-03-01",
+      "name": "[parameters('webAppName')]",
+      "location": "[parameters('location')]",
+      "kind": "app,linux,container",
+      "properties": {
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
+        "siteConfig": {
+          "linuxFxVersion": "[format('DOCKER|{0}', parameters('containerImage'))]",
+          "appSettings": [
+            {
+              "name": "AZURE_TENANT_ID",
+              "value": "[parameters('azureTenantId')]"
+            },
+            {
+              "name": "AZURE_CLIENT_ID",
+              "value": "[parameters('azureClientId')]"
+            },
+            {
+              "name": "AZURE_CLIENT_SECRET",
+              "value": "[parameters('azureClientSecret')]"
+            },
+            {
+              "name": "AZURE_SUBSCRIPTION_ID",
+              "value": "[parameters('azureSubscriptionId')]"
+            },
+            {
+              "name": "WEBSITES_PORT",
+              "value": "[parameters('websitesPort')]"
+            },
+            {
+              "name": "CORS_ORIGIN",
+              "value": "[parameters('corsOrigin')]"
+            },
+            {
+              "name": "LOG_LEVEL",
+              "value": "[parameters('logLevel')]"
+            },
+            {
+              "name": "NODE_ENV",
+              "value": "[parameters('nodeEnv')]"
+            }
+          ],
+          "healthCheckPath": "/health"
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]"
+      ]
+    }
+  ]
+}

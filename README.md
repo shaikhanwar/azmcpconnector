@@ -86,7 +86,7 @@ Now that you have your Azure credentials, you can deploy the MCP connector:
 
 ### Option 1: One-Click Deployment (Recommended)
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fshaikhanwar%2Fazmcpconnector%2Fmain%2Fbicep%2Fazmcpconnector.bicep)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fshaikhanwar%2Fazmcpconnector%2Fmain%2Fbicep%2Fazmcpconnector.json)
 
 1. Click the "Deploy to Azure" button above
 2. Fill in the required information:
@@ -199,44 +199,4 @@ Replace `your-app-name` with your actual App Service name.
 ### Getting Help
 
 - **Logs**: Check Azure Portal → App Service → Log stream
-- **Health Check**: Visit `/health` endpoint for status
-- **SSH Access**: Enable SSH in App Service settings for debugging
-
-## 📋 What Gets Deployed
-
-This deployment creates:
-- **Azure App Service**: Hosts your MCP connector
-- **App Service Plan**: Provides compute resources
-- **Application Insights**: Monitoring and logging
-- **All necessary configuration**: Environment variables, health checks, etc.
-
-## 🏥 Health Check Configuration
-
-The deployment automatically configures health checks for high availability:
-
-- **Health check:** Enabled
-- **Health probe path:** `/health`
-- **Unhealthy instance removal:** 10 minutes (default)
-
-**To verify in Azure Portal:**
-- Go to App Service → Monitoring → Health check
-- Ensure health check is enabled with path `/health`
-
-The app implements a lightweight `/health` endpoint that returns `200 OK` when the service is running properly.
-
-## 🔒 Security Notes
-
-- Service Principal credentials are stored securely in Azure Key Vault
-- The app runs in a container with minimal permissions
-- All traffic is encrypted with HTTPS
-- CORS is configured for security
-
-## 📚 Additional Resources
-
-- [Azure MCP Documentation](https://github.com/Azure/azure-mcp)
-- [Model Context Protocol](https://modelcontextprotocol.io/)
-- [Azure App Service Documentation](https://docs.microsoft.com/en-us/azure/app-service/)
-
----
-
-**Need help?** Check the logs in Azure Portal or create an issue in this repository.
+- **Health Check**: Visit `/health`
