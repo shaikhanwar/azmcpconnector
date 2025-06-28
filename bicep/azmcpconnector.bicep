@@ -1,13 +1,9 @@
-@description('Name of the Resource Group')
-param resourceGroupName string
 @description('Name of the Web App')
 param webAppName string
 @description('Name of the App Service Plan')
 param appServicePlanName string = 'asp-azmpconnector'
-@description('Location for all resources')
-param location string = resourceGroup().location
-@description('Docker image (e.g., docker.io/yourusername/azmpconnector:latest)')
-param containerImage string = 'docker.io/yourusername/azmpconnector:latest'
+@description('Docker image (e.g., shaikhanwar/azmcpconnector:latest)')
+param containerImage string = 'shaikhanwar/azmcpconnector:latest'
 @description('Azure Tenant ID for Service Principal')
 param azureTenantId string
 @description('Azure Client ID for Service Principal')
@@ -28,7 +24,7 @@ param websitesPort string = '80'
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: appServicePlanName
-  location: location
+  location: resourceGroup().location
   sku: {
     name: 'B1'
     tier: 'Basic'
@@ -43,7 +39,7 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = {
 
 resource webApp 'Microsoft.Web/sites@2022-03-01' = {
   name: webAppName
-  location: location
+  location: resourceGroup().location
   kind: 'app,linux,container'
   properties: {
     serverFarmId: appServicePlan.id
