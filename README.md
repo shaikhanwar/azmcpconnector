@@ -86,7 +86,7 @@ Now that you have your Azure credentials, you can deploy the MCP connector:
 
 ### Option 1: One-Click Deployment (Recommended)
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fshaikhanwar%2Fazmcp-deploy%2Fmain%2Fbicep%2Fazmcpconnector.bicep)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fshaikhanwar%2Fazmcpconnector%2Fmain%2Fbicep%2Fazmcpconnector.bicep)
 
 1. Click the "Deploy to Azure" button above
 2. Fill in the required information:
@@ -177,7 +177,7 @@ Add this to your VS Code settings (`Ctrl+Shift+P` → "Preferences: Open Setting
 
 Replace `your-app-name` with your actual App Service name.
 
-## ��️ Troubleshooting
+## 🔧 Troubleshooting
 
 ### Common Issues
 
