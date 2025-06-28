@@ -140,6 +140,14 @@ Replace `your-app-name` with the actual name you used during deployment.
 2. **Test MCP connection**: Try connecting from your MCP client
 3. **Check logs**: In Azure Portal → App Service → Log stream
 
+> **⏰ Important Note**: After deployment, the application may take **15-30 minutes** to be fully operational. During this time, the health endpoint might not respond immediately. Once the deployment is complete, you can test the application using:
+> 
+> ```bash
+> curl -i https://your-app-name.azurewebsites.net/health
+> ```
+> 
+> Replace `your-app-name` with your actual App Service name. The application was tested and verified working with VS Code MCP client after the initial deployment period.
+
 ## 🔧 Post-Deployment Verification
 
 After deployment, verify these critical settings in Azure Portal:
