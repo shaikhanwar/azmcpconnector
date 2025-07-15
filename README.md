@@ -1,8 +1,49 @@
-# Azure MCP Connector - Quick Deployment Guide
+# Azure MCP Solution - Complete Deployment Guide
 
-A simple, containerized Azure MCP (Model Context Protocol) server that you can deploy to Azure App Service with just a few clicks.
+This repository contains a complete Azure MCP (Model Context Protocol) solution with **two main components**:
 
-The application is designed to run the MCP server as a child process and proxy requests to it, providing a stable, containerized environment for the service.
+1. **Azure MCP Connector** - A containerized MCP server for Azure App Service
+2. **Azure MCP Assistant** - A Copilot Agent with Power Automate Flow integration
+
+## 📦 Solution Components
+
+### 1. Azure MCP Connector
+A simple, containerized Azure MCP server that you can deploy to Azure App Service with just a few clicks. The application is designed to run the MCP server as a child process and proxy requests to it, providing a stable, containerized environment for the service.
+
+### 2. Azure MCP Assistant (NEW!)
+A Copilot Studio agent that initializes the MCP Server, loads tools, and lets you execute queries using a conversational chatbot interface. This agent includes Power Automate Flow integration and can be deployed to Microsoft Teams.
+
+**Solution File**: `copilot-agent/AzureMCPAssistant_1_0_0_1_managed.zip`
+
+## 🤖 What can you do with the Azure MCP Assistant?
+
+The Azure MCP Server supercharges your agents with Azure context. Here are some cool prompts you can try:
+
+### Azure Resource Management
+```
+"List my resource groups"
+```
+
+### Azure Storage
+```
+"List my Azure storage accounts"
+"List my Azure storage containers"
+```
+
+### Azure Monitor
+```
+"List my Log Analytics Workspaces"
+"Query my Log Analytics workspace"
+```
+
+> **📝 Note**: Currently only Sign-In Logs and Audit Logs are configured with this solution. However, the Topic can be updated to support any required tables.
+
+### Key Features
+- **Natural Language Interface**: Interact with Azure resources through conversational prompts
+- **Progressive Discovery**: Guided flows for workspace → table → query selection
+- **Teams Integration**: Deploy the MCP Client "Azure MCP Assistant" to Teams for user interaction
+- **Initial Setup**: The MCP Client starts by setting up the Subscription and Log Analytics Workspace for the first time
+- **Intelligent Query Generation**: Dynamic KQL query generation based on user requirements
 
 ## Overview
 
@@ -80,7 +121,44 @@ The MCP server needs to authenticate with Azure. You'll need to create a Service
 > 11. Click "Grant admin consent"
 > 12. Go to "Enterprise applications" → find your app → "Assign users and groups" → add yourself with "Contributor" role
 
-## 🚀 Deploy to Azure
+## 🤖 Deploy Azure MCP Assistant (Copilot Agent)
+
+The Azure MCP Assistant is a ready-to-use Copilot Studio solution that provides a conversational interface to your Azure resources.
+
+### Prerequisites for Copilot Agent
+- Microsoft 365 subscription with Copilot Studio access
+- Power Platform environment
+- Completed Azure Service Principal setup (from Step 1 above)
+
+### Deployment Steps
+
+1. **Import the Solution**:
+   - Download the solution file: `copilot-agent/AzureMCPAssistant_1_0_0_1_managed.zip`
+   - Go to [Power Platform Admin Center](https://admin.powerplatform.microsoft.com/)
+   - Select your environment
+   - Go to Solutions → Import solution
+   - Upload the `AzureMCPAssistant_1_0_0_1_managed.zip` file
+
+2. **Configure the Power Automate Flow**:
+   - Open the imported "Azure MCP Tool Executor" flow
+   - Update the MCP server endpoint to your deployed Azure App Service URL
+   - Configure authentication settings with your Service Principal credentials
+
+3. **Publish the Copilot Agent**:
+   - Open Copilot Studio
+   - Find the "Azure MCP Assistant" agent
+   - Test the agent with sample prompts
+   - Publish to Teams or other channels
+
+4. **Initial User Setup**:
+   - Users will first set up their Subscription ID
+   - Then configure their preferred Log Analytics Workspace
+   - After setup, users can start querying with natural language
+
+### Teams Integration
+Once deployed, the MCP Client "Azure MCP Assistant" can be made available in Microsoft Teams, allowing users to interact with Azure resources through a conversational interface.
+
+## 🚀 Deploy Azure MCP Connector
 
 Now that you have your Azure credentials, you can deploy the MCP connector:
 
@@ -208,3 +286,35 @@ Replace `your-app-name` with your actual App Service name.
 
 - **Logs**: Check Azure Portal → App Service → Log stream
 - **Health Check**: Visit `/health`
+
+## 🎯 Complete Solution Summary
+
+This repository provides a comprehensive Azure MCP solution with two deployment options:
+
+### Option 1: Azure MCP Connector Only
+- Deploy the containerized MCP server to Azure App Service
+- Connect using VS Code or other MCP clients
+- Direct HTTP/JSON-RPC integration
+- Best for: Developers and technical users
+
+### Option 2: Complete Solution (Recommended)
+- Deploy both the Azure MCP Connector AND the Azure MCP Assistant
+- Get a conversational Copilot agent with natural language interface
+- Teams integration for end-user access
+- Best for: Organizations wanting user-friendly Azure resource management
+
+### Deployment Order
+1. **First**: Deploy Azure MCP Connector (provides the backend service)
+2. **Second**: Import and configure Azure MCP Assistant (provides the user interface)
+3. **Third**: Publish to Teams for organization-wide access
+
+### Key Benefits
+- ✅ **Natural Language**: "List my storage accounts" instead of complex CLI commands
+- ✅ **Progressive Discovery**: Guided workflows for complex operations
+- ✅ **Teams Integration**: Accessible where users already work
+- ✅ **Log Analytics**: Query Sign-In and Audit logs with conversational interface
+- ✅ **Extensible**: Solution can be modified to support additional tables and tools
+
+---
+
+**Ready to get started?** Begin with the Azure MCP Connector deployment above, then add the Copilot Assistant for a complete conversational Azure management experience! 🚀
