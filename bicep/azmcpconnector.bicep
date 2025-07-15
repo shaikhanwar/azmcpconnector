@@ -1,7 +1,7 @@
 @description('Name of the Web App')
 param webAppName string
 @description('Name of the App Service Plan')
-param appServicePlanName string = 'asp-azmpconnector'
+param appServicePlanName string = 'asp-azmcpconnector'
 @description('Docker image (e.g., shaikhanwar/azmcpconnector:latest)')
 param containerImage string = 'shaikhanwar/azmcpconnector:latest'
 @description('Azure Tenant ID for Service Principal')
