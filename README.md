@@ -1,5 +1,7 @@
 # Azure MCP Solution - Complete Deployment Guide
 
+<!-- 📋 Note about Screenshots: This README contains hidden HTML comment placeholders throughout the guide that indicate where screenshots should be added. These comments include specific guidance on when and where to capture screenshots during deployment. You can view the source markdown to see these placeholders. -->
+
 This repository contains a complete Azure MCP (Model Context Protocol) solution with **two main components**:
 
 1. **Azure MCP Connector** - A containerized MCP server for Azure App Service
@@ -78,7 +80,12 @@ The MCP server needs to authenticate with Azure. You'll need to create a Service
 
 3. **Create Service Principal**:
    ```bash
-   az ad sp create-for-rbac --name "AzureMCPConnector" --role "Contributor"
+   az ad sp create-for-rbac --name "AzureMCPConnector" --role "Contributor" --scopes /subscriptions/12345678-1234-1234-1234-123456789012
+   ```
+   
+   **⚠️ Important**: Replace `12345678-1234-1234-1234-123456789012` with your actual subscription ID. You can get your subscription ID with:
+   ```bash
+   az account show --query id --output tsv
    ```
 
 4. **⚠️ IMPORTANT: Save the credentials!** 
@@ -121,173 +128,11 @@ The MCP server needs to authenticate with Azure. You'll need to create a Service
 > 11. Click "Grant admin consent"
 > 12. Go to "Enterprise applications" → find your app → "Assign users and groups" → add yourself with "Contributor" role
 
-## 🤖 Deploy Azure MCP Assistant (Copilot Agent)
-
-The Azure MCP Assistant is a ready-to-use Copilot Studio solution that provides a conversational interface to your Azure resources.
-
-### Prerequisites for Copilot Agent
-- **Microsoft 365 subscription** with Copilot Studio access
-- **Power Platform environment** with admin permissions
-- **Completed Azure Service Principal setup** (from Step 1 above)
-- **Teams admin permissions** (for organization-wide deployment)
-- **Power Automate license** (included with most Microsoft 365 plans)
-
-#### Licensing Requirements
-| Feature | License Required |
-|---------|-----------------|
-| Copilot Studio Agent Creation | Microsoft 365 E3/E5 or Copilot Studio license |
-| Teams Integration | Microsoft Teams license (included in most M365 plans) |
-| Power Automate Flow | Power Automate license (included in most M365 plans) |
-| Organization-wide Deployment | Teams admin rights |
-
-#### Environment Setup
-1. **Verify Power Platform Access**: Go to [Power Platform Admin Center](https://admin.powerplatform.microsoft.com/)
-2. **Check Environment**: Ensure you have Maker permissions in your target environment
-3. **Confirm Teams Access**: Verify Teams app installation permissions in your organization
-
-### Deployment Steps
-
-#### Step 1: Import the Solution
-
-1. **Download the Solution File**:
-   - Get the solution file: `copilot-agent/AzureMCPAssistant_1_0_0_1_managed.zip`
-
-2. **Access Copilot Studio**:
-   - Navigate to [https://copilotstudio.microsoft.com](https://copilotstudio.microsoft.com)
-   - Sign in with your organizational account
-   - Select your Power Platform environment
-
-3. **Import the Solution**:
-   - Click the **menu icon (...)** on the left navigation pane
-   - Select **Solutions**
-   - Click **Import solution** in the top menu bar
-   - Click **Browse** and select the `AzureMCPAssistant_1_0_0_1_managed.zip` file
-   - Click **Next** to proceed
-   - Review the import details and click **Next**
-   - Click **Import** to finish the process
-   - Wait for the import to complete successfully
-
-4. **Verify Import**:
-   - Return to the Copilot Studio home page
-   - Look for "Azure MCP Assistant" in your agents list
-   - If import fails, download the log file for troubleshooting
-
-**📚 Reference**: [Official Import Guide](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-export-import-bots)
-
-#### Step 2: Configure the Power Automate Flow
-
-1. **Access the Flow**:
-   - In your imported solution, find "Azure MCP Tool Executor" flow
-   - Open the flow for editing
-
-2. **Update Settings**:
-   - Update the MCP server endpoint to your deployed Azure App Service URL:
-     ```
-     https://your-app-name.azurewebsites.net/mcp
-     ```
-   - Configure authentication settings with your Service Principal credentials
-   - Test the flow to ensure connectivity
-
-#### Step 3: Publish the Copilot Agent
-
-1. **Publish the Agent**:
-   - In Copilot Studio, open the "Azure MCP Assistant" agent
-   - Click **Publish** in the top menu
-   - Click **Publish** again to confirm
-   - Wait for publishing to complete (may take a few minutes)
-
-2. **Test the Agent**:
-   - Use the test chat panel to verify the agent responds correctly
-   - Try sample prompts like "List my storage accounts"
-
-**📚 Reference**: [Publishing Guide](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-fundamentals-publish-channels)
-
-#### Step 4: Deploy to Microsoft Teams
-
-1. **Add Teams Channel**:
-   - In your agent, click **Channels** in the top menu
-   - Select **Teams and Microsoft 365 Copilot** tile
-   - Ensure **Make agent available in Microsoft 365 Copilot** is selected
-   - Click **Add channel**
-
-2. **Customize Appearance**:
-   - Click **Edit details** to customize:
-     - Agent icon and color
-     - Description (visible in Teams app store)
-     - Developer information
-     - Privacy statement and terms of use
-
-3. **Set Availability Options**:
-   - Click **Availability options**
-   - Choose from these options:
-     - **Personal use**: Install for yourself only
-     - **Share with teammates**: Share installation link with specific users
-     - **Organization-wide**: Submit for admin approval to appear in "Built for your org"
-
-4. **Install for Personal Use**:
-   - Click **See agent in Teams**
-   - Click **Add** in the Teams dialog
-   - The agent appears in your Teams agent list
-
-5. **Share with Others** (Option A):
-   - Click **Copy link** to get installation URL
-   - Share the link with users who need access
-   - Users click the link to install in their Teams
-
-6. **Submit for Organization** (Option B):
-   - Click **Show to everyone in my org**
-   - Review requirements and click **Submit for admin approval**
-   - Wait for admin approval
-   - Once approved, the agent appears in Teams "Built for your org" section
-
-**📚 Reference**: [Teams Deployment Guide](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-add-bot-to-microsoft-teams)
-
-#### Step 5: User Onboarding
-
-1. **Initial Setup Flow**:
-   - New users will be guided through subscription setup
-   - Users configure their preferred Log Analytics Workspace
-   - System validates credentials and permissions
-
-2. **Ready to Use**:
-   - Users can start with natural language queries
-   - Examples: "List my storage accounts", "Query audit logs"
-   - Progressive discovery guides users through complex operations
-
-### Teams Integration
-Once deployed, the MCP Client "Azure MCP Assistant" can be made available in Microsoft Teams, allowing users to interact with Azure resources through a conversational interface.
-
-### 🔧 Troubleshooting Copilot Agent Deployment
-
-#### Import Issues
-- **Solution import fails**: Download the log file for detailed error messages
-- **Missing dependencies**: Ensure your environment has the required permissions and components
-- **Large solution timeouts**: Import may take longer for complex solutions; wait up to 15 minutes
-
-#### Publishing Issues
-- **Agent won't publish**: Verify all topics are saved and no validation errors exist
-- **Teams channel not appearing**: Ensure you've published the agent at least once before adding channels
-- **Authentication errors**: Verify Power Automate flow has correct Azure App Service endpoint
-
-#### Teams Integration Issues
-- **Agent not visible in Teams**: Try signing out and back in, or refresh browser
-- **Installation link not working**: Ensure user has proper access permissions to the agent
-- **Admin approval pending**: Contact your Teams administrator for approval status
-
-#### Common Solutions
-- **Clear Teams cache**: Sign out of Teams desktop app and sign back in
-- **Refresh browser**: For Teams web app, refresh the page
-- **Check permissions**: Ensure users have access to both the Copilot agent and Teams integration
-- **Verify environment**: Confirm you're in the correct Power Platform environment
-
-#### Getting Help
-- **Official Documentation**: [Copilot Studio Learn Portal](https://learn.microsoft.com/en-us/microsoft-copilot-studio/)
-- **Community Support**: [Power Platform Community](https://powerplatform.microsoft.com/en-us/community/)
-- **Video Tutorials**: Search for "Copilot Studio deployment" on Microsoft Learn
+<!-- 📸 Screenshot Needed: Add a screenshot of the Azure CLI output showing the Service Principal creation command and its JSON response for clarity. You can capture this when running the `az ad sp create-for-rbac` command yourself. -->
 
 ## 🚀 Deploy Azure MCP Connector
 
-Now that you have your Azure credentials, you can deploy the MCP connector:
+Now that you have your Azure credentials, you can deploy the MCP connector. **This must be deployed first** as it provides the backend service for the Azure MCP Assistant.
 
 ### Option 1: One-Click Deployment (Recommended)
 
@@ -306,6 +151,8 @@ Now that you have your Azure credentials, you can deploy the MCP connector:
 3. Click "Review + Create" and then "Create"
 4. Wait for deployment to complete (usually 2-3 minutes)
 
+<!-- 📸 Screenshot Needed: Add a screenshot of the Azure deployment template form with the fields filled out (with redacted credentials). You can capture this from the Azure portal when deploying the template. -->
+
 ### Option 2: Manual Deployment
 
 If you prefer to deploy manually or need to customize the deployment:
@@ -318,28 +165,7 @@ az deployment group create \
   dockerImage="shaikhanwar/azmcpconnector:latest"
 ```
 
-## 📱 Connect Your MCP Client
-
-Once deployed, configure your MCP client (like VS Code) to connect:
-
-### VS Code Configuration
-Add this to your VS Code settings (`Ctrl+Shift+P` → "Preferences: Open Settings (JSON)"):
-
-```json
-{
-  "mcp": {
-    "servers": {
-      "Azure MCP": {
-        "url": "https://your-app-name.azurewebsites.net/mcp"
-      }
-    }
-  }
-}
-```
-
-Replace `your-app-name` with the actual name you used during deployment.
-
-## ✅ Verify Deployment
+## ✅ Verify MCP Connector Deployment
 
 1. **Check the app is running**: Visit `https://your-app-name.azurewebsites.net/health`
 2. **Test MCP connection**: Try connecting from your MCP client
@@ -352,6 +178,8 @@ Replace `your-app-name` with the actual name you used during deployment.
 > ```
 > 
 > Replace `your-app-name` with your actual App Service name. The application was tested and verified working with VS Code MCP client after the initial deployment period.
+
+<!-- 📸 Screenshot Needed: Add a screenshot of a successful health check response and the Azure App Service overview page showing the running status. You can capture these from the Azure portal after deployment. -->
 
 ## 🔧 Post-Deployment Verification
 
@@ -390,29 +218,183 @@ Add this to your VS Code settings (`Ctrl+Shift+P` → "Preferences: Open Setting
 
 Replace `your-app-name` with your actual App Service name.
 
-## 🔧 Troubleshooting
+## 🤖 Deploy Azure MCP Assistant (Copilot Agent)
 
-### Common Issues
+**Prerequisites**: The Azure MCP Connector must be deployed and running before proceeding with this step. The Assistant depends on the Connector as its backend service.
 
-**App returns 503 errors:**
-- Check that all Azure credentials are correctly set
-- Verify the Service Principal has Contributor permissions
-- Check the log stream for detailed error messages
+The Azure MCP Assistant is a ready-to-use Copilot Studio solution that provides a conversational interface to your Azure resources.
 
-**Can't connect from MCP client:**
-- Ensure you're using the correct URL format: `https://your-app-name.azurewebsites.net/mcp`
-- Check that CORS is properly configured
-- Verify the app is running (check health endpoint)
+### Prerequisites for Copilot Agent
+- **Completed Azure MCP Connector deployment** (from previous step)
+- **Microsoft 365 subscription** with Copilot Studio access
+- **Power Platform environment** with admin permissions
+- **Teams admin permissions** (for organization-wide deployment)
+- **Power Automate license** (included with most Microsoft 365 plans)
 
-**Authentication errors:**
-- Double-check your Service Principal credentials
-- Ensure the Service Principal hasn't expired
-- Verify the subscription ID is correct
+#### Licensing Requirements
+| Feature | License Required |
+|---------|-----------------|
+| Copilot Studio Agent Creation | Microsoft 365 E3/E5 or Copilot Studio license |
+| Teams Integration | Microsoft Teams license (included in most M365 plans) |
+| Power Automate Flow | Power Automate license (included in most M365 plans) |
+| Organization-wide Deployment | Teams admin rights |
 
-### Getting Help
+#### Environment Setup
+1. **Verify Power Platform Access**: Go to [Power Platform Admin Center](https://admin.powerplatform.microsoft.com/)
+2. **Check Environment**: Ensure you have Maker permissions in your target environment
+3. **Confirm Teams Access**: Verify Teams app installation permissions in your organization
 
-- **Logs**: Check Azure Portal → App Service → Log stream
-- **Health Check**: Visit `/health`
+### Deployment Steps
+
+#### Step 1: Import the Solution
+
+1. **Download the Solution File**:
+   - Get the solution file: `copilot-agent/AzureMCPAssistant_1_0_0_1_managed.zip`
+
+2. **Access Copilot Studio**:
+   - Navigate to [https://copilotstudio.microsoft.com](https://copilotstudio.microsoft.com)
+   - Sign in with your organizational account
+   - Select your Power Platform environment
+
+<!-- 📸 Screenshot Needed: Add a screenshot of the Copilot Studio main page with the menu icon highlighted. You can capture this from https://copilotstudio.microsoft.com after signing in. -->
+
+3. **Import the Solution**:
+   - Click the **menu icon (...)** on the left navigation pane
+   - Select **Solutions**
+   - Click **Import solution** in the top menu bar
+   - Click **Browse** and select the `AzureMCPAssistant_1_0_0_1_managed.zip` file
+   - Click **Next** to proceed
+   - Review the import details and click **Next**
+   - Click **Import** to finish the process
+   - Wait for the import to complete successfully
+
+<!-- 📸 Screenshot Needed: Add a screenshot of the solution import dialog with the Browse button highlighted and another showing the successful import confirmation. You can capture these during the import process in Copilot Studio. -->
+
+4. **Verify Import**:
+   - Return to the Copilot Studio home page
+   - Look for "Azure MCP Assistant" in your agents list
+   - If import fails, download the log file for troubleshooting
+
+**📚 Reference**: [Official Import Guide](https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-export-import-bots)
+
+#### Step 2: Configure the Power Automate Flow
+
+1. **Access the Flow**:
+   - In your imported solution, find "Azure MCP Tool Executor" flow
+   - Open the flow for editing
+
+2. **Update Settings**:
+   - Update the MCP server endpoint to your deployed Azure App Service URL:
+     ```
+     https://your-app-name.azurewebsites.net/mcp
+     ```
+   - Configure authentication settings with your Service Principal credentials
+   - Test the flow to ensure connectivity
+
+<!-- 📸 Screenshot Needed: Add a screenshot of the Power Automate flow configuration page showing where to update the MCP server endpoint. You can capture this when editing the "Azure MCP Tool Executor" flow. -->
+
+#### Step 3: Publish the Copilot Agent
+
+1. **Publish the Agent**:
+   - In Copilot Studio, open the "Azure MCP Assistant" agent
+   - Click **Publish** in the top menu
+   - Click **Publish** again to confirm
+   - Wait for publishing to complete (may take a few minutes)
+
+2. **Test the Agent**:
+   - Use the test chat panel to verify the agent responds correctly
+   - Try sample prompts like "List my storage accounts"
+
+<!-- 📸 Screenshot Needed: Add a screenshot of the publish button in Copilot Studio and another showing the test chat panel with a successful response. You can capture these during the publishing and testing process. -->
+
+**📚 Reference**: [Publishing Guide](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-fundamentals-publish-channels)
+
+#### Step 4: Deploy to Microsoft Teams
+
+1. **Add Teams Channel**:
+   - In your agent, click **Channels** in the top menu
+   - Select **Teams and Microsoft 365 Copilot** tile
+   - Ensure **Make agent available in Microsoft 365 Copilot** is selected
+   - Click **Add channel**
+
+2. **Customize Appearance**:
+   - Click **Edit details** to customize:
+     - Agent icon and color
+     - Description (visible in Teams app store)
+     - Developer information
+     - Privacy statement and terms of use
+
+3. **Set Availability Options**:
+   - Click **Availability options**
+   - Choose from these options:
+     - **Personal use**: Install for yourself only
+     - **Share with teammates**: Share installation link with specific users
+     - **Organization-wide**: Submit for admin approval to appear in "Built for your org"
+
+<!-- 📸 Screenshot Needed: Add a screenshot of the Teams channel configuration page showing the availability options. You can capture this when configuring the Teams channel in Copilot Studio. -->
+
+4. **Install for Personal Use**:
+   - Click **See agent in Teams**
+   - Click **Add** in the Teams dialog
+   - The agent appears in your Teams agent list
+
+5. **Share with Others** (Option A):
+   - Click **Copy link** to get installation URL
+   - Share the link with users who need access
+   - Users click the link to install in their Teams
+
+6. **Submit for Organization** (Option B):
+   - Click **Show to everyone in my org**
+   - Review requirements and click **Submit for admin approval**
+   - Wait for admin approval
+   - Once approved, the agent appears in Teams "Built for your org" section
+
+**📚 Reference**: [Teams Deployment Guide](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-add-bot-to-microsoft-teams)
+
+#### Step 5: User Onboarding
+
+1. **Initial Setup Flow**:
+   - New users will be guided through subscription setup
+   - Users configure their preferred Log Analytics Workspace
+   - System validates credentials and permissions
+
+2. **Ready to Use**:
+   - Users can start with natural language queries
+   - Examples: "List my storage accounts", "Query audit logs"
+   - Progressive discovery guides users through complex operations
+
+### Teams Integration
+Once deployed, the MCP Client "Azure MCP Assistant" can be made available in Microsoft Teams, allowing users to interact with Azure resources through a conversational interface.
+
+<!-- 📸 Screenshot Needed: Add a screenshot of the Azure MCP Assistant running in Microsoft Teams with a sample conversation. You can capture this after successfully deploying the agent to Teams. -->
+
+### 🔧 Troubleshooting Copilot Agent Deployment
+
+#### Import Issues
+- **Solution import fails**: Download the log file for detailed error messages
+- **Missing dependencies**: Ensure your environment has the required permissions and components
+- **Large solution timeouts**: Import may take longer for complex solutions; wait up to 15 minutes
+
+#### Publishing Issues
+- **Agent won't publish**: Verify all topics are saved and no validation errors exist
+- **Teams channel not appearing**: Ensure you've published the agent at least once before adding channels
+- **Authentication errors**: Verify Power Automate flow has correct Azure App Service endpoint
+
+#### Teams Integration Issues
+- **Agent not visible in Teams**: Try signing out and back in, or refresh browser
+- **Installation link not working**: Ensure user has proper access permissions to the agent
+- **Admin approval pending**: Contact your Teams administrator for approval status
+
+#### Common Solutions
+- **Clear Teams cache**: Sign out of Teams desktop app and sign back in
+- **Refresh browser**: For Teams web app, refresh the page
+- **Check permissions**: Ensure users have access to both the Copilot agent and Teams integration
+- **Verify environment**: Confirm you're in the correct Power Platform environment
+
+#### Getting Help
+- **Official Documentation**: [Copilot Studio Learn Portal](https://learn.microsoft.com/en-us/microsoft-copilot-studio/)
+- **Community Support**: [Power Platform Community](https://powerplatform.microsoft.com/en-us/community/)
+- **Video Tutorials**: Search for "Copilot Studio deployment" on Microsoft Learn
 
 ## 🎯 Complete Solution Summary
 
