@@ -78,7 +78,7 @@ The MCP server needs to authenticate with Azure. You'll need to create a Service
 
 3. **Create Service Principal**:
    ```bash
-   az ad sp create-for-rbac --name "AzureMCPConnector" --role "Contributor"
+   az ad sp create-for-rbac --name "AzureMCPConnector" --role "Contributor" --scopes "/subscriptions/YOUR_SUBSCRIPTION_ID"
    ```
 
 4. **⚠️ IMPORTANT: Save the credentials!** 
